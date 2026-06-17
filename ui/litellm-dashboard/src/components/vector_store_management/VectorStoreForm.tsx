@@ -340,7 +340,7 @@ const VectorStoreForm: React.FC<VectorStoreFormProps> = ({
           label={
             <span>
               Vector Store Name{" "}
-              <Tooltip title="Custom name you want to give to the vector store, this name will be rendered on the LiteLLM UI">
+              <Tooltip title="Custom name you want to give to the vector store, this name will be rendered on the ATLAS Inference Proxy Dashboard UI">
                 <InfoCircleOutlined style={{ marginLeft: "4px" }} />
               </Tooltip>
             </span>

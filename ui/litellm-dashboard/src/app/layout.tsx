@@ -9,8 +9,8 @@ import ReactQueryProvider from "@/contexts/ReactQueryProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "LiteLLM Dashboard",
-  description: "LiteLLM Proxy Admin UI",
+  title: "ATLAS Inference Proxy Dashboard",
+  description: "ATLAS Inference Proxy Dashboard Admin UI",
   icons: { icon: "/get_favicon" },
 };
 

@@ -86,7 +86,7 @@ vi.mock("./Navbar/CommunityEngagementButtons/CommunityEngagementButtons", () => 
         Join Slack
       </a>
       <a href="https://github.com/BerriAI/litellm" target="_blank" rel="noopener noreferrer">
-        Star us on GitHub
+        Docs
       </a>
     </div>
   ),

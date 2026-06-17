@@ -17,6 +17,7 @@ import { NAV_PRODUCT_LINK_CLASS } from "./Navbar/navProductLinkClass";
 import { NotificationsBell } from "./Navbar/NotificationsBell/NotificationsBell";
 import UserDropdown from "./Navbar/UserDropdown/UserDropdown";
 import WorkerDropdown from "./Navbar/WorkerDropdown/WorkerDropdown";
+import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
 
 interface NavbarProps {
   accessToken: string | null;
@@ -40,6 +41,7 @@ const Navbar: React.FC<NavbarProps> = ({
   const hideCommunityLinks = useDisableShowPrompts();
   const { isControlPlane, selectedWorker } = useWorker();
   const showWorkerSwitch = isControlPlane && selectedWorker !== null;
+  const { userId, userEmail, userRole, premiumUser } = useAuthorized();
 
   const imageUrl = logoUrl || `${baseUrl}/get_image`;
 
@@ -117,7 +119,9 @@ const Navbar: React.FC<NavbarProps> = ({
                 <WorkerDropdown onWorkerSwitch={handleWorkerSwitch} />
               </div>
             )}
-
+          {/* CS: Updated */}
+          {userRole === "Admin" && (
+            <>
             <nav
               aria-label="Product documentation"
               className={`flex min-w-0 items-center gap-2 ${showWorkerSwitch ? "border-l border-gray-200 pl-4" : ""}`}
@@ -129,7 +133,6 @@ const Navbar: React.FC<NavbarProps> = ({
                 className={NAV_PRODUCT_LINK_CLASS}
               >
                 Docs
-                {/* Layout parity with Blog chevron — intentional single-level link */}
                 <DownOutlined className="pointer-events-none text-[10px] opacity-0" aria-hidden />
               </a>
               <BlogDropdown />
@@ -140,11 +143,15 @@ const Navbar: React.FC<NavbarProps> = ({
                 <CommunityEngagementButtons />
               </div>
             )}
+            </>
+          )}
 
             {!isPublicPage && (
               <div className="flex shrink-0 items-center border-l border-gray-200 pl-4">
                 <div className="flex items-center gap-0.5 rounded-lg bg-gray-50 px-1 py-0 transition-colors hover:bg-gray-100">
-                  <NotificationsBell />
+                  {userRole === "Admin" && (
+                    <NotificationsBell />
+                  )}
                   <span className="mx-0.5 h-6 w-px shrink-0 bg-gray-200" aria-hidden />
                   <UserDropdown onLogout={handleLogout} />
                 </div>

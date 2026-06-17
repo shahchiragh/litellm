@@ -4663,7 +4663,7 @@ export interface paths {
         };
         /**
          * Global View Spend Tags
-         * @description LiteLLM Enterprise - View Spend Per Request Tag. Used by LiteLLM UI
+         * @description LiteLLM Enterprise - View Spend Per Request Tag. Used by ATLAS Inference Proxy Dashboard UI
          *
          *     Example Request:
          *     ```
@@ -14400,7 +14400,7 @@ export interface paths {
         /**
          * New User
          * @description Use this to create a new INTERNAL user with a budget.
-         *     Internal Users can access LiteLLM Admin UI to make keys, request access to models.
+         *     Internal Users can access ATLAS Inference Proxy Dashboard Admin UI to make keys, request access to models.
          *     This creates a new user and generates a new api key for the new user. The new api key is returned.
          *
          *     Returns user id, budget + new key.
@@ -28005,7 +28005,7 @@ export interface components {
             methods?: string[] | null;
             /**
              * Path
-             * @description The route to be added to the LiteLLM Proxy Server.
+             * @description The route to be added to the Inference Proxy Server.
              */
             path: string;
             /**

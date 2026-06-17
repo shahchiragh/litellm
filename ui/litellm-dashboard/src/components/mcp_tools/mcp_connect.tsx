@@ -209,11 +209,11 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
         <div className="flex items-center gap-3 mb-3">
           <Zap className="text-emerald-600" size={24} />
           <Title level={4} className="mb-0 text-emerald-900">
-            LiteLLM Proxy API Integration
+            ATLAS Inference Proxy Dashboard API Integration
           </Title>
         </div>
         <Text className="text-emerald-700">
-          Connect to LiteLLM Proxy Responses API for seamless tool integration with multiple model providers
+          Connect to ATLAS Inference Proxy Dashboard Responses API for seamless tool integration with multiple model providers
         </Text>
       </div>
 
@@ -221,11 +221,11 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
         <FeatureCard
           icon={<KeyIcon className="text-emerald-600" size={16} />}
           title="Virtual Key Setup"
-          description="Configure your LiteLLM Proxy Virtual Key for authentication"
+          description="Configure your Inference Proxy Virtual Key for authentication"
         >
           <Space direction="vertical" size="middle" className="w-full">
             <div>
-              <Text>Get your Virtual Key from your LiteLLM Proxy dashboard or contact your administrator</Text>
+              <Text>Get your Virtual Key from your Inference Proxy dashboard or contact your administrator</Text>
             </div>
             <CodeBlock title="Environment Variable" code='export LITELLM_API_KEY="sk-..."' copyKey="litellm-env" />
           </Space>
@@ -242,7 +242,7 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
         <FeatureCard
           icon={<Code className="text-emerald-600" size={16} />}
           title="Implementation Example"
-          description="Complete cURL example for using the LiteLLM Proxy Responses API"
+          description="Complete cURL example for using the Inference Proxy Responses API"
           serverName={currentServer}
           accessGroups={["dev-group"]}
         >
@@ -500,7 +500,7 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
               <Tab className="px-6 py-3 rounded-md transition-all duration-200">
                 <span className="flex items-center gap-2 font-medium">
                   <Zap size={18} />
-                  LiteLLM Proxy
+                  Inference Proxy
                 </span>
               </Tab>
               <Tab className="px-6 py-3 rounded-md transition-all duration-200">

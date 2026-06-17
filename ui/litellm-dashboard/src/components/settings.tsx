@@ -712,7 +712,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
           style={{ color: "blue" }}
         >
           {" "}
-          LiteLLM Docs: Logging
+          ATLAS Inference Proxy Dashboard Docs: Logging
         </a>
 
         <Form
