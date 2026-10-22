@@ -1,3 +1,4 @@
+import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
 import { useHealthReadinessDetails } from "@/app/(dashboard)/hooks/healthReadiness/useHealthReadinessDetails";
 import { useDisableBouncingIcon } from "@/app/(dashboard)/hooks/useDisableBouncingIcon";
 import { useDisableShowPrompts } from "@/app/(dashboard)/hooks/useDisableShowPrompts";
@@ -15,6 +16,7 @@ import { BlogDropdown } from "./Navbar/BlogDropdown/BlogDropdown";
 import { DocsLink } from "./Navbar/DocsLink/DocsLink";
 import { CommunityEngagementButtons } from "./Navbar/CommunityEngagementButtons/CommunityEngagementButtons";
 import { cn } from "@/lib/cva.config";
+import { isProxyAdminRole } from "@/utils/roles";
 import { NotificationsBell } from "./Navbar/NotificationsBell/NotificationsBell";
 import UserDropdown from "./Navbar/UserDropdown/UserDropdown";
 import ThemeToggle from "./ThemeToggle/ThemeToggle";
@@ -44,6 +46,8 @@ const Navbar: React.FC<NavbarProps> = ({
   const hideCommunityLinks = useDisableShowPrompts();
   const { isControlPlane, selectedWorker } = useWorker();
   const showWorkerSwitch = isControlPlane && selectedWorker !== null;
+  const { userRole } = useAuthorized();
+  const isProxyAdmin = isProxyAdminRole(userRole);
 
   const imageUrl = logoUrl || `${baseUrl}/get_image`;
   const darkImageUrl = logoUrl || `${baseUrl}/get_image?theme=dark`;
@@ -130,15 +134,17 @@ const Navbar: React.FC<NavbarProps> = ({
               </div>
             )}
 
-            <nav
-              aria-label="Product documentation"
-              className={`flex min-w-0 items-center gap-2 ${showWorkerSwitch ? "border-l border-border pl-4" : ""}`}
-            >
-              <DocsLink />
-              <BlogDropdown />
-            </nav>
+            {isProxyAdmin && (
+              <nav
+                aria-label="Product documentation"
+                className={`flex min-w-0 items-center gap-2 ${showWorkerSwitch ? "border-l border-border pl-4" : ""}`}
+              >
+                <DocsLink />
+                <BlogDropdown />
+              </nav>
+            )}
 
-            {!hideCommunityLinks && (
+            {isProxyAdmin && !hideCommunityLinks && (
               <div className="flex shrink-0 items-center border-l border-border pl-4">
                 <CommunityEngagementButtons />
               </div>
@@ -149,8 +155,12 @@ const Navbar: React.FC<NavbarProps> = ({
                 <div className="flex items-center gap-0.5 rounded-lg bg-muted px-1 py-0 transition-colors hover:bg-accent">
                   <ThemeToggle />
                   <span className="mx-0.5 h-6 w-px shrink-0 bg-border" aria-hidden />
-                  <NotificationsBell />
-                  <span className="mx-0.5 h-6 w-px shrink-0 bg-border" aria-hidden />
+                  {isProxyAdmin && (
+                    <>
+                      <NotificationsBell />
+                      <span className="mx-0.5 h-6 w-px shrink-0 bg-border" aria-hidden />
+                    </>
+                  )}
                   <UserDropdown onLogout={handleLogout} />
                 </div>
               </div>

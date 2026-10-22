@@ -134,76 +134,80 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, variant = "navbar
         </div>
         <span>{userRole}</span>
       </div>
-      <Separator className="my-2" />
-      <div className="flex w-full items-center justify-between gap-2">
-        <span className="text-muted-foreground">Hide New Feature Indicators</span>
-        <Switch
-          size="sm"
-          checked={disableShowNewBadge}
-          onCheckedChange={(checked) => {
-            setDisableShowNewBadge(checked);
-            if (checked) {
-              setLocalStorageItem("disableShowNewBadge", "true");
-              emitLocalStorageChange("disableShowNewBadge");
-            } else {
-              removeLocalStorageItem("disableShowNewBadge");
-              emitLocalStorageChange("disableShowNewBadge");
-            }
-          }}
-          aria-label="Toggle hide new feature indicators"
-        />
-      </div>
-      <div className="flex w-full items-center justify-between gap-2">
-        <span className="text-muted-foreground">Hide All Prompts</span>
-        <Switch
-          size="sm"
-          checked={disableShowPrompts}
-          onCheckedChange={(checked) => {
-            if (checked) {
-              setLocalStorageItem("disableShowPrompts", "true");
-              emitLocalStorageChange("disableShowPrompts");
-            } else {
-              removeLocalStorageItem("disableShowPrompts");
-              emitLocalStorageChange("disableShowPrompts");
-            }
-          }}
-          aria-label="Toggle hide all prompts"
-        />
-      </div>
-      <div className="flex w-full items-center justify-between gap-2">
-        <span className="text-muted-foreground">Hide Blog Posts</span>
-        <Switch
-          size="sm"
-          checked={disableBlogPosts}
-          onCheckedChange={(checked) => {
-            if (checked) {
-              setLocalStorageItem("disableBlogPosts", "true");
-              emitLocalStorageChange("disableBlogPosts");
-            } else {
-              removeLocalStorageItem("disableBlogPosts");
-              emitLocalStorageChange("disableBlogPosts");
-            }
-          }}
-          aria-label="Toggle hide blog posts"
-        />
-      </div>
-      <div className="flex w-full items-center justify-between gap-2">
-        <span className="text-muted-foreground">Hide Bouncing Icon</span>
-        <Switch
-          size="sm"
-          checked={disableBouncingIcon}
-          onCheckedChange={(checked) => {
-            if (checked) {
-              setLocalStorageItem("disableBouncingIcon", "true");
-              emitLocalStorageChange("disableBouncingIcon");
-            } else {
-              removeLocalStorageItem("disableBouncingIcon");
-              emitLocalStorageChange("disableBouncingIcon");
-            }
-          }}
-          aria-label="Toggle hide bouncing icon"
-        />
-      </div>
+      {isProxyAdminRole(role) && (
+        <>
+          <Separator className="my-2" />
+          <div className="flex w-full items-center justify-between gap-2">
+            <span className="text-muted-foreground">Hide New Feature Indicators</span>
+            <Switch
+              size="sm"
+              checked={disableShowNewBadge}
+              onCheckedChange={(checked) => {
+                setDisableShowNewBadge(checked);
+                if (checked) {
+                  setLocalStorageItem("disableShowNewBadge", "true");
+                  emitLocalStorageChange("disableShowNewBadge");
+                } else {
+                  removeLocalStorageItem("disableShowNewBadge");
+                  emitLocalStorageChange("disableShowNewBadge");
+                }
+              }}
+              aria-label="Toggle hide new feature indicators"
+            />
+          </div>
+          <div className="flex w-full items-center justify-between gap-2">
+            <span className="text-muted-foreground">Hide All Prompts</span>
+            <Switch
+              size="sm"
+              checked={disableShowPrompts}
+              onCheckedChange={(checked) => {
+                if (checked) {
+                  setLocalStorageItem("disableShowPrompts", "true");
+                  emitLocalStorageChange("disableShowPrompts");
+                } else {
+                  removeLocalStorageItem("disableShowPrompts");
+                  emitLocalStorageChange("disableShowPrompts");
+                }
+              }}
+              aria-label="Toggle hide all prompts"
+            />
+          </div>
+          <div className="flex w-full items-center justify-between gap-2">
+            <span className="text-muted-foreground">Hide Blog Posts</span>
+            <Switch
+              size="sm"
+              checked={disableBlogPosts}
+              onCheckedChange={(checked) => {
+                if (checked) {
+                  setLocalStorageItem("disableBlogPosts", "true");
+                  emitLocalStorageChange("disableBlogPosts");
+                } else {
+                  removeLocalStorageItem("disableBlogPosts");
+                  emitLocalStorageChange("disableBlogPosts");
+                }
+              }}
+              aria-label="Toggle hide blog posts"
+            />
+          </div>
+          <div className="flex w-full items-center justify-between gap-2">
+            <span className="text-muted-foreground">Hide Bouncing Icon</span>
+            <Switch
+              size="sm"
+              checked={disableBouncingIcon}
+              onCheckedChange={(checked) => {
+                if (checked) {
+                  setLocalStorageItem("disableBouncingIcon", "true");
+                  emitLocalStorageChange("disableBouncingIcon");
+                } else {
+                  removeLocalStorageItem("disableBouncingIcon");
+                  emitLocalStorageChange("disableBouncingIcon");
+                }
+              }}
+              aria-label="Toggle hide bouncing icon"
+            />
+          </div>
+        </>
+      )}
       {premiumUser === true && canUseLiteAdmin && (
         <div className="flex w-full items-center justify-between gap-2">
           <span className="text-muted-foreground">Hide LiteAdmin</span>

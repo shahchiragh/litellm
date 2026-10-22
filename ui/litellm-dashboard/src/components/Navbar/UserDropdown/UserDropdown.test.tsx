@@ -6,6 +6,7 @@ import UserDropdown from "./UserDropdown";
 let mockUseAuthorizedImpl: () => {
   userId: string | null;
   userEmail: string | null;
+  userRole?: string;
   userRoleLabel: string;
   premiumUser: boolean;
   loginMethod?: string | null;
@@ -56,6 +57,7 @@ describe("UserDropdown", () => {
     mockUseAuthorizedImpl = () => ({
       userId: "test-user-id",
       userEmail: "test@example.com",
+      userRole: "proxy_admin",
       userRoleLabel: "Admin",
       premiumUser: false,
     });
@@ -282,6 +284,28 @@ describe("UserDropdown", () => {
     const localStorageUtils = vi.mocked(await import("@/utils/localStorageUtils"));
     expect(localStorageUtils.removeLocalStorageItem).toHaveBeenCalledWith("disableShowPrompts");
     expect(localStorageUtils.emitLocalStorageChange).toHaveBeenCalledWith("disableShowPrompts");
+  });
+
+  it("should hide the preference toggles from non-admin users", async () => {
+    mockUseAuthorizedImpl = () => ({
+      userId: "test-user-id",
+      userEmail: "test@example.com",
+      userRole: "internal_user",
+      userRoleLabel: "Internal User",
+      premiumUser: false,
+    });
+    const user = userEvent.setup();
+    renderWithProviders(<UserDropdown onLogout={mockOnLogout} />);
+
+    await user.click(getAccountTrigger());
+
+    await waitFor(() => {
+      expect(screen.getByTestId("user-dropdown-panel")).toBeInTheDocument();
+    });
+    expect(screen.queryByLabelText("Toggle hide new feature indicators")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Toggle hide all prompts")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Toggle hide blog posts")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Toggle hide bouncing icon")).not.toBeInTheDocument();
   });
 
   it("should show Account in the trigger when user id is the default placeholder", () => {

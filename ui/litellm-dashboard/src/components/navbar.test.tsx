@@ -1,6 +1,6 @@
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { renderWithProviders, screen, waitFor } from "../../tests/test-utils";
 import Navbar from "./navbar";
 
@@ -92,10 +92,11 @@ vi.mock("./Navbar/CommunityEngagementButtons/CommunityEngagementButtons", () => 
 let mockUseThemeImpl = () => ({ logoUrl: null as string | null });
 let mockUseHealthReadinessDetailsImpl = () => ({ data: null as any });
 let mockGetLocalStorageItemImpl = (key: string) => null as string | null;
+let mockUserRole = "Admin";
 const mockUseAuthorizedImpl = () => ({
   userId: "test-user",
   userEmail: "test@example.com",
-  userRole: "Admin",
+  userRole: mockUserRole,
   premiumUser: false,
 });
 
@@ -139,6 +140,10 @@ describe("Navbar", () => {
     accessToken: "test-token",
     isPublicPage: false,
   };
+
+  beforeEach(() => {
+    mockUserRole = "Admin";
+  });
 
   it("should render without crashing", () => {
     renderWithProviders(<Navbar {...defaultProps} />);
@@ -266,6 +271,17 @@ describe("Navbar", () => {
     renderWithProviders(<Navbar {...publicPageProps} />);
 
     expect(screen.queryByRole("button", { name: /open account menu/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^notifications$/i })).not.toBeInTheDocument();
+  });
+
+  it("should hide docs, blog, community links and notifications from non-admin users", () => {
+    mockUserRole = "internal_user";
+    renderWithProviders(<Navbar {...defaultProps} />);
+
+    expect(screen.getByRole("button", { name: /open account menu/i })).toBeInTheDocument();
+    expect(screen.queryByText("Docs")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("blog-dropdown")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("community-engagement-buttons")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /^notifications$/i })).not.toBeInTheDocument();
   });
 

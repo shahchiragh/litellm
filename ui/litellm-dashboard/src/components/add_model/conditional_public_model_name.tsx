@@ -40,7 +40,7 @@ const ANTHROPIC_1M_HEADERS = JSON.stringify({ extra_headers: { "anthropic-beta":
 
 const publicNameTooltipContent = (
   <div className="flex flex-col gap-2 text-left font-normal">
-    <div>The name you specify in your API calls to LiteLLM Proxy</div>
+    <div>The name you specify in your API calls to Inference Proxy</div>
     <div>
       <strong>Example:</strong> If you name your public model <code className={tooltipCodeClassName}>example-name</code>
       , and choose <code className={tooltipCodeClassName}>openai/qwen-plus-latest</code> as the LiteLLM model

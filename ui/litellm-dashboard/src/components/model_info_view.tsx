@@ -275,7 +275,7 @@ export default function ModelInfoView({
         parsedExtraParams = values.litellm_extra_params ? JSON.parse(values.litellm_extra_params) : {};
         delete parsedExtraParams.litellm_credential_name;
       } catch (e) {
-        toast.fromError("Invalid JSON in LiteLLM Params");
+        toast.fromError("Invalid JSON in ATLAS Inference Proxy Dashboard Params");
         setIsSaving(false);
         return;
       }

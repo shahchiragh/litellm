@@ -466,7 +466,7 @@ const VectorStoreForm: React.FC<VectorStoreFormProps> = ({
                 name="vector_store_name"
                 label={labelWithHint(
                   "Vector Store Name",
-                  "Custom name you want to give to the vector store, this name will be rendered on the LiteLLM UI",
+                  "Custom name you want to give to the vector store, this name will be rendered on the ATLAS Inference Proxy Dashboard UI",
                 )}
               >
                 {({ ref, value, ...field }) => <Input {...field} ref={ref} value={value ?? ""} />}
