@@ -10,6 +10,9 @@ export interface ProxySettings {
   LITELLM_UI_API_DOC_BASE_URL?: string | null;
   DISABLE_EXPENSIVE_DB_QUERIES?: boolean;
   NUM_SPEND_LOGS_ROWS?: number;
+  ATLAS_DOCS_URL?: string | null;
+  ATLAS_SUPPORT_URL?: string | null;
+  ATLAS_GITHUB_URL?: string | null;
 }
 
 const EMPTY_PROXY_SETTINGS: ProxySettings = {

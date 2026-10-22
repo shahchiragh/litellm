@@ -30,18 +30,6 @@ beforeEach(() => {
       if (url.endsWith("/api/plugins")) {
         return Response.json([{ name: "metrics", display_name: "Metrics", url: "/metrics" }]);
       }
-      if (url.endsWith("/public/litellm_blog_posts")) {
-        return Response.json({
-          posts: [
-            {
-              title: "Gateway update",
-              description: "Release notes",
-              date: "2026-01-01",
-              url: "https://example.com/update",
-            },
-          ],
-        });
-      }
       return Response.json({}, { status: 404 });
     }),
   );
@@ -88,16 +76,6 @@ describe("mobile header nested controls", () => {
       expect(screen.getByRole("dialog", { name: "Gateway tools" })).toBeVisible();
     },
   );
-
-  it("lets a nested blog link receive the click before closing its menu", async () => {
-    const { user, tools } = await openTools();
-    await user.click(within(tools).getByRole("button", { name: "Blog" }));
-    const link = await screen.findByRole("link", { name: /Gateway update/ });
-    expect(link).toHaveAttribute("href", "https://example.com/update");
-    await user.click(link);
-    expect(screen.queryByRole("menu", { name: "Blog" })).not.toBeInTheDocument();
-    expect(screen.getByRole("dialog", { name: "Gateway tools" })).toBeVisible();
-  });
 
   it("allows filtering and selecting a worker from the nested combobox", async () => {
     localStorage.setItem("litellm_selected_worker_id", "primary");

@@ -18,10 +18,6 @@ vi.mock("@/app/(dashboard)/hooks/useDisableBouncingIcon", () => ({
   useDisableBouncingIcon: () => false,
 }));
 
-vi.mock("./Navbar/BlogDropdown/BlogDropdown", () => ({
-  BlogDropdown: () => <div data-testid="blog-dropdown">Blog</div>,
-}));
-
 const mockUserDropdownData = vi.hoisted(() => ({
   current: () => ({
     userId: "test-user",
@@ -74,16 +70,14 @@ vi.mock("./Navbar/UserDropdown/UserDropdown", async (importOriginal) => {
   };
 });
 
-// Mock CommunityEngagementButtons component
 vi.mock("./Navbar/CommunityEngagementButtons/CommunityEngagementButtons", () => ({
-  CommunityEngagementButtons: () => (
+  CommunityEngagementButtons: ({ links }: { links: readonly { href: string; label: string }[] }) => (
     <div data-testid="community-engagement-buttons">
-      <a href="https://www.litellm.ai/support" target="_blank" rel="noopener noreferrer">
-        Join Slack
-      </a>
-      <a href="https://github.com/BerriAI/litellm" target="_blank" rel="noopener noreferrer">
-        Star us on GitHub
-      </a>
+      {links.map(({ href, label }) => (
+        <a key={href} href={href}>
+          {label}
+        </a>
+      ))}
     </div>
   ),
 }));
@@ -93,6 +87,12 @@ let mockUseThemeImpl = () => ({ logoUrl: null as string | null });
 let mockUseHealthReadinessDetailsImpl = () => ({ data: null as any });
 let mockGetLocalStorageItemImpl = (key: string) => null as string | null;
 let mockUserRole = "Admin";
+let mockDocsUrl: string | null = "https://docs.atlas.test/";
+const mockCommunityLinks = [{ href: "https://support.atlas.test/", label: "ATLAS Support", tooltip: "ATLAS support" }];
+
+vi.mock("@/lib/branding", () => ({
+  useAtlasLinks: () => ({ docsUrl: mockDocsUrl, communityLinks: mockCommunityLinks }),
+}));
 const mockUseAuthorizedImpl = () => ({
   userId: "test-user",
   userEmail: "test@example.com",
@@ -143,6 +143,7 @@ describe("Navbar", () => {
 
   beforeEach(() => {
     mockUserRole = "Admin";
+    mockDocsUrl = "https://docs.atlas.test/";
   });
 
   it("should render without crashing", () => {
@@ -274,15 +275,21 @@ describe("Navbar", () => {
     expect(screen.queryByRole("button", { name: /^notifications$/i })).not.toBeInTheDocument();
   });
 
-  it("should hide docs, blog, community links and notifications from non-admin users", () => {
+  it("shows the ATLAS docs and community links to non-admin users but hides notifications", () => {
     mockUserRole = "internal_user";
     renderWithProviders(<Navbar {...defaultProps} />);
 
-    expect(screen.getByRole("button", { name: /open account menu/i })).toBeInTheDocument();
-    expect(screen.queryByText("Docs")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("blog-dropdown")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("community-engagement-buttons")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Docs" })).toHaveAttribute("href", "https://docs.atlas.test/");
+    expect(screen.getByRole("link", { name: "ATLAS Support" })).toHaveAttribute("href", "https://support.atlas.test/");
+    expect(screen.queryByText("Blog")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /^notifications$/i })).not.toBeInTheDocument();
+  });
+
+  it("omits the Docs link when no ATLAS docs URL is configured", () => {
+    mockDocsUrl = null;
+    renderWithProviders(<Navbar {...defaultProps} />);
+
+    expect(screen.queryByRole("link", { name: "Docs" })).not.toBeInTheDocument();
   });
 
   it("should handle hide new feature indicators toggle", async () => {

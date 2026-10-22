@@ -24,7 +24,9 @@ vi.mock("next/navigation", () => ({ usePathname: () => state.pathname }));
 vi.mock("usehooks-ts", () => ({ useMediaQuery: () => state.isDesktop }));
 vi.mock("@/hooks/useWorker", () => ({ useWorker: () => ({ isControlPlane: false, selectedWorker: null }) }));
 vi.mock("@/app/(dashboard)/hooks/useDisableShowPrompts", () => ({ useDisableShowPrompts: () => false }));
-vi.mock("@/components/Navbar/BlogDropdown/BlogDropdown", () => ({ BlogDropdown: () => null }));
+vi.mock("@/lib/branding", () => ({
+  useAtlasLinks: () => ({ docsUrl: "https://docs.atlas.test/", communityLinks: [] }),
+}));
 vi.mock("@/components/Navbar/CommunityEngagementButtons/CommunityEngagementButtons", () => ({
   CommunityEngagementButtons: () => null,
 }));

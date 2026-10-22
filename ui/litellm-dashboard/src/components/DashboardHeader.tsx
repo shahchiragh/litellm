@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { ToolbarSeparator } from "@/components/shared/ToolbarSeparator";
 import { getBreadcrumb } from "@/components/leftnav";
-import { BlogDropdown } from "@/components/Navbar/BlogDropdown/BlogDropdown";
 import { DocsLink } from "@/components/Navbar/DocsLink/DocsLink";
 import { CommunityEngagementButtons } from "@/components/Navbar/CommunityEngagementButtons/CommunityEngagementButtons";
 import { NotificationsBell } from "@/components/Navbar/NotificationsBell/NotificationsBell";
@@ -19,6 +18,9 @@ import ThemeToggle from "@/components/ThemeToggle/ThemeToggle";
 import WorkerDropdown from "@/components/Navbar/WorkerDropdown/WorkerDropdown";
 import { useWorker } from "@/hooks/useWorker";
 import { useDisableShowPrompts } from "@/app/(dashboard)/hooks/useDisableShowPrompts";
+import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
+import { isProxyAdminRole } from "@/utils/roles";
+import { useAtlasLinks } from "@/lib/branding";
 import { clearTokenCookies } from "@/utils/cookieUtils";
 import { clearStoredReturnUrl, getLoginUrl } from "@/utils/returnUrlUtils";
 import { usePathname } from "next/navigation";
@@ -39,6 +41,9 @@ export function DashboardHeader({ navigationTrigger }: { navigationTrigger?: Rea
   const { isControlPlane, selectedWorker } = useWorker();
   const showWorkerSwitch = isControlPlane && selectedWorker !== null;
   const hideCommunityLinks = useDisableShowPrompts();
+  const { userRole } = useAuthorized();
+  const isProxyAdmin = isProxyAdminRole(userRole);
+  const { docsUrl, communityLinks } = useAtlasLinks();
 
   const handleWorkerSwitch = (workerId: string) => {
     clearTokenCookies();
@@ -73,16 +78,15 @@ export function DashboardHeader({ navigationTrigger }: { navigationTrigger?: Rea
           </>
         )}
         <LiteAdmin />
-        <DocsLink />
-        <BlogDropdown />
-        {!hideCommunityLinks && <CommunityEngagementButtons />}
+        <DocsLink href={docsUrl} />
+        {!hideCommunityLinks && <CommunityEngagementButtons links={communityLinks} />}
         <ToolbarSeparator />
         <ThemeToggle />
-        <NotificationsBell />
+        {isProxyAdmin && <NotificationsBell />}
       </div>
       <div className="flex shrink-0 items-center gap-1 md:hidden">
         <CommandPaletteTrigger mobile />
-        <NotificationsBell />
+        {isProxyAdmin && <NotificationsBell />}
         <Popover open={!isDesktop && mobileToolsOpen} onOpenChange={setMobileToolsOpen}>
           <PopoverTrigger render={<Button variant="ghost" size="icon" className="size-11" aria-label="More options" />}>
             <Ellipsis />
@@ -94,9 +98,8 @@ export function DashboardHeader({ navigationTrigger }: { navigationTrigger?: Rea
             <div className="flex flex-wrap items-center gap-2">
               <LiteAdmin />
               <ThemeToggle />
-              <DocsLink />
-              <BlogDropdown />
-              {!hideCommunityLinks && <CommunityEngagementButtons />}
+              <DocsLink href={docsUrl} />
+              {!hideCommunityLinks && <CommunityEngagementButtons links={communityLinks} />}
             </div>
           </PopoverContent>
         </Popover>

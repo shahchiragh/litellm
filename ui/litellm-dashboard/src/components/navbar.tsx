@@ -12,11 +12,11 @@ import { Badge } from "@/components/ui/badge";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { BlogDropdown } from "./Navbar/BlogDropdown/BlogDropdown";
 import { DocsLink } from "./Navbar/DocsLink/DocsLink";
 import { CommunityEngagementButtons } from "./Navbar/CommunityEngagementButtons/CommunityEngagementButtons";
 import { cn } from "@/lib/cva.config";
 import { isProxyAdminRole } from "@/utils/roles";
+import { useAtlasLinks } from "@/lib/branding";
 import { NotificationsBell } from "./Navbar/NotificationsBell/NotificationsBell";
 import UserDropdown from "./Navbar/UserDropdown/UserDropdown";
 import ThemeToggle from "./ThemeToggle/ThemeToggle";
@@ -48,6 +48,7 @@ const Navbar: React.FC<NavbarProps> = ({
   const showWorkerSwitch = isControlPlane && selectedWorker !== null;
   const { userRole } = useAuthorized();
   const isProxyAdmin = isProxyAdminRole(userRole);
+  const { docsUrl, communityLinks } = useAtlasLinks();
 
   const imageUrl = logoUrl || `${baseUrl}/get_image`;
   const darkImageUrl = logoUrl || `${baseUrl}/get_image?theme=dark`;
@@ -134,19 +135,16 @@ const Navbar: React.FC<NavbarProps> = ({
               </div>
             )}
 
-            {isProxyAdmin && (
-              <nav
-                aria-label="Product documentation"
-                className={`flex min-w-0 items-center gap-2 ${showWorkerSwitch ? "border-l border-border pl-4" : ""}`}
-              >
-                <DocsLink />
-                <BlogDropdown />
-              </nav>
-            )}
+            <nav
+              aria-label="Product documentation"
+              className={`flex min-w-0 items-center gap-2 ${showWorkerSwitch ? "border-l border-border pl-4" : ""}`}
+            >
+              <DocsLink href={docsUrl} />
+            </nav>
 
-            {isProxyAdmin && !hideCommunityLinks && (
+            {!hideCommunityLinks && (
               <div className="flex shrink-0 items-center border-l border-border pl-4">
-                <CommunityEngagementButtons />
+                <CommunityEngagementButtons links={communityLinks} />
               </div>
             )}
 

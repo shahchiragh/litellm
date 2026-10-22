@@ -6,6 +6,7 @@ import SidebarAccountMenu from "./SidebarAccountMenu";
 interface AuthMock {
   userId: string | null;
   userEmail: string | null;
+  userRole?: string;
   userRoleLabel: string;
   premiumUser: boolean;
   accessToken: string;
@@ -81,6 +82,7 @@ describe("SidebarAccountMenu", () => {
     mockUseAuthorizedImpl = () => ({
       userId: "test-user-id",
       userEmail: "test@example.com",
+      userRole: "proxy_admin",
       userRoleLabel: "Admin",
       premiumUser: false,
       accessToken: "test-token",
@@ -242,6 +244,35 @@ describe("SidebarAccountMenu", () => {
     await openMenu(user);
 
     expect(screen.queryByRole("button", { name: /change password/i })).not.toBeInTheDocument();
+  });
+
+  it("should hide the preference toggles and the blog toggle from non-admin users", async () => {
+    mockUseAuthorizedImpl = () => ({
+      userId: "test-user-id",
+      userEmail: "test@example.com",
+      userRole: "internal_user",
+      userRoleLabel: "Internal User",
+      premiumUser: false,
+      accessToken: "test-token",
+    });
+    const user = userEvent.setup();
+    renderWithProviders(<SidebarAccountMenu onLogout={mockOnLogout} />);
+
+    await openMenu(user);
+
+    expect(screen.queryByLabelText("Toggle hide new feature indicators")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Toggle hide all prompts")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Toggle hide bouncing icon")).not.toBeInTheDocument();
+  });
+
+  it("never offers a Hide Blog Posts toggle since the blog menu is gone", async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<SidebarAccountMenu onLogout={mockOnLogout} />);
+
+    await openMenu(user);
+
+    expect(screen.getByLabelText("Toggle hide all prompts")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Toggle hide blog posts")).not.toBeInTheDocument();
   });
 
   it("should toggle hide new feature indicators on", async () => {

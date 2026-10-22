@@ -2706,6 +2706,9 @@ async def get_ui_settings(request: Request):
         "SSO_ENABLED": _is_sso_enabled,
         "NUM_SPEND_LOGS_ROWS": proxy_state.get_proxy_state_variable("spend_logs_row_count"),
         "DISABLE_EXPENSIVE_DB_QUERIES": disable_expensive_db_queries,
+        "ATLAS_DOCS_URL": os.getenv("ATLAS_DOCS_URL"),
+        "ATLAS_SUPPORT_URL": os.getenv("ATLAS_SUPPORT_URL"),
+        "ATLAS_GITHUB_URL": os.getenv("ATLAS_GITHUB_URL"),
     }
 
 
