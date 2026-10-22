@@ -240,6 +240,11 @@ const EntityUsage: React.FC<EntityUsageProps> = ({
   const modelBreakdownKey = modelViewType === "groups" ? "model_groups" : "models";
   const modelMetrics = processActivityData(spendData, modelBreakdownKey, teamList);
   const agentMetrics = showAgentBreakdown ? processActivityData(agentSpendData, "entities", teamList) : {};
+  const showMcpServerBreakdown = entityType === "team";
+  const mcpServerMetrics = useMemo(
+    () => (showMcpServerBreakdown ? processActivityData(spendData, "mcp_servers", teamList) : {}),
+    [showMcpServerBreakdown, spendData, teamList],
+  );
 
   const getAllTags = () => {
     if (entityList) {
@@ -639,6 +644,15 @@ const EntityUsage: React.FC<EntityUsageProps> = ({
         />
       ),
     },
+    ...(showMcpServerBreakdown
+      ? [
+          {
+            key: "mcp",
+            label: "MCP Server Activity",
+            content: <ActivityMetrics modelMetrics={mcpServerMetrics} />,
+          },
+        ]
+      : []),
     { key: "endpoints", label: "Endpoint Activity", content: <EndpointUsage userSpendData={spendData} /> },
   ];
 

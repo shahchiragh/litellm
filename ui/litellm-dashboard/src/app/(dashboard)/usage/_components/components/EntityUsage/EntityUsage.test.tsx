@@ -765,6 +765,7 @@ describe("EntityUsage", () => {
     ["Model Activity", "metrics-source:model_groups"],
     ["Agent Activity", "metrics-source:entities"],
     ["Key Activity", "Overall Usage"],
+    ["MCP Server Activity", "metrics-source:mcp_servers"],
     ["Endpoint Activity", "Endpoint Usage Panel"],
   ];
 
@@ -960,6 +961,17 @@ describe("EntityUsage", () => {
     });
 
     expect(screen.queryByText("Agent Activity")).not.toBeInTheDocument();
+  });
+
+  it("should not display MCP Server Activity tab for non-team entity types", async () => {
+    render(<EntityUsage {...defaultProps} entityType="tag" />);
+
+    await waitFor(() => {
+      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+    });
+
+    expect(screen.queryByText("MCP Server Activity")).not.toBeInTheDocument();
+    expect(screen.queryByText("metrics-source:mcp_servers")).not.toBeInTheDocument();
   });
 
   it("should display Top Agents Driving Spend card for team entity type", async () => {
