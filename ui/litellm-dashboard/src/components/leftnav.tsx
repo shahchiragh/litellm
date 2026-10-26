@@ -29,7 +29,6 @@ import {
   Bell,
   Blocks,
   Bot,
-  BookOpen,
   Building2,
   Boxes,
   ChevronRight,
@@ -372,13 +371,6 @@ const menuGroups: MenuGroup[] = [
       { key: "api_ref", page: "api_ref", route: "api-reference", label: "API Reference", icon: <Code2 {...ICON} /> },
       { key: "model-hub-table", page: "model-hub-table", label: "AI Hub", icon: <LayoutGrid {...ICON} /> },
       {
-        key: "learning-resources",
-        page: "learning-resources",
-        label: "Learning Resources",
-        icon: <BookOpen {...ICON} />,
-        external_url: "https://models.litellm.ai/cookbook",
-      },
-      {
         key: "caching",
         page: "caching",
         label: "Response Cache",
@@ -706,7 +698,6 @@ const Sidebar_: React.FC<SidebarProps> = ({
             {version && (
               <Badge
                 variant="outline"
-                render={<a href="https://docs.litellm.ai/release_notes" target="_blank" rel="noopener noreferrer" />}
                 className="px-1.5 py-0 font-mono text-[10px] font-medium text-muted-foreground group-data-[collapsed=true]/sidebar:hidden"
               >
                 v{version}

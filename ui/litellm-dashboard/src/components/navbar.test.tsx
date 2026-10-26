@@ -149,7 +149,7 @@ describe("Navbar", () => {
   it("should render without crashing", () => {
     renderWithProviders(<Navbar {...defaultProps} />);
 
-    expect(screen.getByRole("button", { name: /^notifications$/i })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^notifications$/i })).not.toBeInTheDocument();
     expect(screen.getByText("Docs")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /open account menu/i })).toBeInTheDocument();
   });
@@ -228,12 +228,14 @@ describe("Navbar", () => {
     mockUserDropdownData.current = originalCurrent;
   });
 
-  it("should show version badge when health data contains version", () => {
+  it("shows the version as plain text with no release notes link or bouncing icon", () => {
     mockUseHealthReadinessDetailsImpl = () => ({ data: { litellm_version: "1.0.0" } });
 
     renderWithProviders(<Navbar {...defaultProps} />);
 
     expect(screen.getByText("v1.0.0")).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "v1.0.0" })).not.toBeInTheDocument();
+    expect(screen.queryByTitle("Thanks for using LiteLLM!")).not.toBeInTheDocument();
 
     // Reset mock
     mockUseHealthReadinessDetailsImpl = () => ({ data: null });

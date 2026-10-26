@@ -1,6 +1,5 @@
 import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
 import { useHealthReadinessDetails } from "@/app/(dashboard)/hooks/healthReadiness/useHealthReadinessDetails";
-import { useDisableBouncingIcon } from "@/app/(dashboard)/hooks/useDisableBouncingIcon";
 import { useDisableShowPrompts } from "@/app/(dashboard)/hooks/useDisableShowPrompts";
 import { useWorker } from "@/hooks/useWorker";
 import { getProxyBaseUrl } from "@/components/networking";
@@ -17,7 +16,6 @@ import { CommunityEngagementButtons } from "./Navbar/CommunityEngagementButtons/
 import { cn } from "@/lib/cva.config";
 import { isProxyAdminRole } from "@/utils/roles";
 import { useAtlasLinks } from "@/lib/branding";
-import { NotificationsBell } from "./Navbar/NotificationsBell/NotificationsBell";
 import UserDropdown from "./Navbar/UserDropdown/UserDropdown";
 import ThemeToggle from "./ThemeToggle/ThemeToggle";
 import ViewSwitcher from "./Navbar/ViewSwitcher";
@@ -42,7 +40,6 @@ const Navbar: React.FC<NavbarProps> = ({
   const { logoUrl } = useTheme();
   const { data: healthData } = useHealthReadinessDetails(accessToken);
   const version = healthData?.litellm_version;
-  const disableBouncingIcon = useDisableBouncingIcon();
   const hideCommunityLinks = useDisableShowPrompts();
   const { isControlPlane, selectedWorker } = useWorker();
   const showWorkerSwitch = isControlPlane && selectedWorker !== null;
@@ -97,27 +94,9 @@ const Navbar: React.FC<NavbarProps> = ({
                 </div>
               </Link>
               {version && (
-                <div className="relative">
-                  {!disableBouncingIcon && (
-                    <span
-                      className="absolute -left-2 -top-1 animate-bounce text-lg"
-                      style={{ animationDuration: "2s" }}
-                      title="Thanks for using LiteLLM!"
-                    >
-                      🌑
-                    </span>
-                  )}
-                  <Badge variant="outline" className="relative z-raised cursor-pointer text-xs font-medium">
-                    <a
-                      href="https://docs.litellm.ai/release_notes"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="shrink-0"
-                    >
-                      v{version}
-                    </a>
-                  </Badge>
-                </div>
+                <Badge variant="outline" className="text-xs font-medium">
+                  v{version}
+                </Badge>
               )}
             </div>
           </div>
@@ -153,12 +132,6 @@ const Navbar: React.FC<NavbarProps> = ({
                 <div className="flex items-center gap-0.5 rounded-lg bg-muted px-1 py-0 transition-colors hover:bg-accent">
                   <ThemeToggle />
                   <span className="mx-0.5 h-6 w-px shrink-0 bg-border" aria-hidden />
-                  {isProxyAdmin && (
-                    <>
-                      <NotificationsBell />
-                      <span className="mx-0.5 h-6 w-px shrink-0 bg-border" aria-hidden />
-                    </>
-                  )}
                   <UserDropdown onLogout={handleLogout} />
                 </div>
               </div>

@@ -1,6 +1,5 @@
 import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
 import { useHealthReadinessDetails } from "@/app/(dashboard)/hooks/healthReadiness/useHealthReadinessDetails";
-import { useDisableBouncingIcon } from "@/app/(dashboard)/hooks/useDisableBouncingIcon";
 import { useDisableLiteAdmin } from "@/app/(dashboard)/hooks/useDisableLiteAdmin";
 import { useDisableShowNewBadge } from "@/app/(dashboard)/hooks/useDisableShowNewBadge";
 import { useDisableShowPrompts } from "@/app/(dashboard)/hooks/useDisableShowPrompts";
@@ -16,11 +15,9 @@ import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/cva.config";
 import { uiHref } from "@/utils/uiHref";
 import { isProxyAdminRole } from "@/utils/roles";
-import { ChevronsUpDown, Crown, IdCard, KeyRound, LogOut, Mail, ShieldCheck } from "lucide-react";
+import { ChevronsUpDown, IdCard, KeyRound, LogOut, Mail, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
-
-const RELEASE_NOTES_URL = "https://docs.litellm.ai/release_notes";
 
 function hueFromString(seed: string): number {
   let h = 0;
@@ -99,7 +96,6 @@ const SidebarAccountMenu: React.FC<SidebarAccountMenuProps> = ({ onLogout, colla
   const { data: healthData } = useHealthReadinessDetails(accessToken);
   const version = healthData?.litellm_version;
   const disableShowPrompts = useDisableShowPrompts();
-  const disableBouncingIcon = useDisableBouncingIcon();
   const disableShowNewBadge = useDisableShowNewBadge();
   const [disableLiteAdmin, setDisableLiteAdmin] = useDisableLiteAdmin(userId);
   const canUseLiteAdmin = userId && !isViewOnly && isProxyAdminRole(role);
@@ -127,13 +123,6 @@ const SidebarAccountMenu: React.FC<SidebarAccountMenuProps> = ({ onLogout, colla
       ariaLabel: "Toggle hide all prompts",
       checked: disableShowPrompts,
       onCheckedChange: (checked: boolean) => setFlag("disableShowPrompts", checked),
-    },
-    {
-      key: "disableBouncingIcon",
-      label: "Hide Bouncing Icon",
-      ariaLabel: "Toggle hide bouncing icon",
-      checked: disableBouncingIcon,
-      onCheckedChange: (checked: boolean) => setFlag("disableBouncingIcon", checked),
     },
   ];
 
@@ -177,43 +166,16 @@ const SidebarAccountMenu: React.FC<SidebarAccountMenuProps> = ({ onLogout, colla
         data-testid="sidebar-account-menu-panel"
       >
         <div className="flex items-center gap-2 border-b border-border px-3 py-3">
-          <span className="text-[15px] font-bold tracking-tight text-foreground">LiteLLM</span>
-          {!disableBouncingIcon && (
-            <span
-              className="animate-bounce text-lg leading-none"
-              style={{ animationDuration: "2s" }}
-              title="Thanks for using LiteLLM!"
-              aria-hidden
-            >
-              🌴
-            </span>
-          )}
+          <span className="text-[15px] font-bold tracking-tight text-foreground">ATLAS</span>
           <span className="flex-1" />
           {version && (
-            <Badge
-              variant="outline"
-              render={<a href={RELEASE_NOTES_URL} target="_blank" rel="noopener noreferrer" />}
-              className="px-1.5 py-0 font-mono text-[10px] font-medium text-muted-foreground"
-            >
+            <Badge variant="outline" className="px-1.5 py-0 font-mono text-[10px] font-medium text-muted-foreground">
               v{version}
             </Badge>
           )}
         </div>
 
         <div className="flex flex-col px-3 py-2">
-          <InfoRow icon={<Crown className="size-[17px]" />} label="Tier">
-            {premiumUser ? (
-              <Badge variant="outline" className="gap-1 border-warning/30 bg-warning/10 text-warning">
-                <Crown />
-                Premium
-              </Badge>
-            ) : (
-              <Badge variant="secondary" className="gap-1" title="Upgrade to Premium for advanced features">
-                <Crown />
-                Standard
-              </Badge>
-            )}
-          </InfoRow>
           <InfoRow icon={<ShieldCheck className="size-[17px]" />} label="Role">
             <Badge variant="secondary">{userRole}</Badge>
           </InfoRow>

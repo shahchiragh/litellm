@@ -11,7 +11,6 @@ import { ToolbarSeparator } from "@/components/shared/ToolbarSeparator";
 import { getBreadcrumb } from "@/components/leftnav";
 import { DocsLink } from "@/components/Navbar/DocsLink/DocsLink";
 import { CommunityEngagementButtons } from "@/components/Navbar/CommunityEngagementButtons/CommunityEngagementButtons";
-import { NotificationsBell } from "@/components/Navbar/NotificationsBell/NotificationsBell";
 import ViewSwitcher from "@/components/Navbar/ViewSwitcher";
 import LiteAdmin from "@/components/liteadmin/LiteAdmin";
 import ThemeToggle from "@/components/ThemeToggle/ThemeToggle";
@@ -82,11 +81,9 @@ export function DashboardHeader({ navigationTrigger }: { navigationTrigger?: Rea
         {!hideCommunityLinks && <CommunityEngagementButtons links={communityLinks} />}
         <ToolbarSeparator />
         <ThemeToggle />
-        {isProxyAdmin && <NotificationsBell />}
       </div>
       <div className="flex shrink-0 items-center gap-1 md:hidden">
         <CommandPaletteTrigger mobile />
-        {isProxyAdmin && <NotificationsBell />}
         <Popover open={!isDesktop && mobileToolsOpen} onOpenChange={setMobileToolsOpen}>
           <PopoverTrigger render={<Button variant="ghost" size="icon" className="size-11" aria-label="More options" />}>
             <Ellipsis />

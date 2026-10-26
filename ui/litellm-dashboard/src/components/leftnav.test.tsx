@@ -266,7 +266,6 @@ describe("Sidebar (leftnav)", () => {
       "Budgets",
       "API Reference",
       "AI Hub",
-      "Learning Resources",
       "Experimental",
       "Settings",
     ];
@@ -274,6 +273,7 @@ describe("Sidebar (leftnav)", () => {
     topLevelLabels.forEach((label) => {
       expect(screen.getByText(label)).toBeInTheDocument();
     });
+    expect(screen.queryByText("Learning Resources")).not.toBeInTheDocument();
   });
 
   it("expands a nested tab to reveal its children (Tools > Search Tools)", async () => {

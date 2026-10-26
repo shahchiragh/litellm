@@ -28,7 +28,6 @@ vi.mock("next/navigation", () => ({
 }));
 
 let mockUseDisableShowPromptsImpl = () => false;
-let mockUseDisableBouncingIconImpl = () => false;
 let mockHealthDataImpl = (): { litellm_version?: string } | undefined => ({ litellm_version: "1.99.0" });
 
 let mockGetLocalStorageItemImpl = (key: string): string | null => {
@@ -47,10 +46,6 @@ vi.mock("@/app/(dashboard)/hooks/useDisableShowPrompts", () => ({
 
 vi.mock("@/app/(dashboard)/hooks/useDisableBlogPosts", () => ({
   useDisableBlogPosts: () => false,
-}));
-
-vi.mock("@/app/(dashboard)/hooks/useDisableBouncingIcon", () => ({
-  useDisableBouncingIcon: () => mockUseDisableBouncingIconImpl(),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/healthReadiness/useHealthReadinessDetails", () => ({
@@ -88,7 +83,6 @@ describe("SidebarAccountMenu", () => {
       accessToken: "test-token",
     });
     mockUseDisableShowPromptsImpl = () => false;
-    mockUseDisableBouncingIconImpl = () => false;
     mockHealthDataImpl = () => ({ litellm_version: "1.99.0" });
     mockGetLocalStorageItemImpl = (key: string): string | null => {
       if (key === "disableShowNewBadge") return null;
@@ -122,41 +116,33 @@ describe("SidebarAccountMenu", () => {
     expect(screen.getAllByText("Admin").length).toBeGreaterThan(0);
   });
 
-  it("should display Standard tier for non-premium users", async () => {
-    const user = userEvent.setup();
-    renderWithProviders(<SidebarAccountMenu onLogout={mockOnLogout} />);
-
-    await openMenu(user);
-
-    expect(screen.getByText("Standard")).toBeInTheDocument();
-  });
-
-  it("should display Premium tier for premium users", async () => {
+  it.each([false, true])("never shows a LiteLLM tier upsell badge (premiumUser=%s)", async (premiumUser) => {
     const user = userEvent.setup();
     mockUseAuthorizedImpl = () => ({
       userId: "test-user-id",
       userEmail: "test@example.com",
+      userRole: "proxy_admin",
       userRoleLabel: "Admin",
-      premiumUser: true,
+      premiumUser,
       accessToken: "test-token",
     });
-
     renderWithProviders(<SidebarAccountMenu onLogout={mockOnLogout} />);
 
     await openMenu(user);
 
-    expect(screen.getByText("Premium")).toBeInTheDocument();
+    expect(screen.queryByText("Standard")).not.toBeInTheDocument();
+    expect(screen.queryByText("Premium")).not.toBeInTheDocument();
+    expect(screen.queryByTitle("Upgrade to Premium for advanced features")).not.toBeInTheDocument();
   });
 
-  it("should render a clickable version badge linking to the release notes", async () => {
+  it("shows the version as plain text without linking to the LiteLLM release notes", async () => {
     const user = userEvent.setup();
     renderWithProviders(<SidebarAccountMenu onLogout={mockOnLogout} />);
 
     await openMenu(user);
 
-    const versionLink = screen.getByRole("link", { name: /v1\.99\.0/ });
-    expect(versionLink).toHaveAttribute("href", "https://docs.litellm.ai/release_notes");
-    expect(versionLink).toHaveAttribute("target", "_blank");
+    expect(screen.getByText("v1.99.0")).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /v1\.99\.0/ })).not.toBeInTheDocument();
   });
 
   it("should not render the version badge when the version is unavailable", async () => {
@@ -169,19 +155,14 @@ describe("SidebarAccountMenu", () => {
     expect(screen.queryByRole("link", { name: /^v/ })).not.toBeInTheDocument();
   });
 
-  it("should show the bouncing icon by default", async () => {
+  it("brands the menu as ATLAS with no LiteLLM bouncing icon or its toggle", async () => {
     const user = userEvent.setup();
     renderWithProviders(<SidebarAccountMenu onLogout={mockOnLogout} />);
     await openMenu(user);
-    expect(screen.getByTitle("Thanks for using LiteLLM!")).toBeInTheDocument();
-  });
-
-  it("should hide the bouncing icon when Hide Bouncing Icon is enabled", async () => {
-    const user = userEvent.setup();
-    mockUseDisableBouncingIconImpl = () => true;
-    renderWithProviders(<SidebarAccountMenu onLogout={mockOnLogout} />);
-    await openMenu(user);
+    expect(screen.getByText("ATLAS")).toBeInTheDocument();
+    expect(screen.queryByText("LiteLLM")).not.toBeInTheDocument();
     expect(screen.queryByTitle("Thanks for using LiteLLM!")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Toggle hide bouncing icon")).not.toBeInTheDocument();
   });
 
   it("wires the email row to the shared copy button", async () => {

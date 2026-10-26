@@ -96,6 +96,8 @@ describe("LoginPage", () => {
     await waitFor(() => {
       expect(screen.getByRole("heading", { name: "Login" })).toBeInTheDocument();
     });
+    expect(screen.getByText("Default Credentials")).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /documentation/i })).not.toBeInTheDocument();
   });
 
   it("should call router.replace to dashboard when jwt is valid", async () => {
